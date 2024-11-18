@@ -21,6 +21,7 @@ import service
 from models import User
 from post.router import router as post_router
 from post import service as post_service
+from user import service as user_service
 
 from fastapi_pagination import Page, add_pagination, Params, set_page, set_params
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -100,17 +101,7 @@ async def profile(
 @app.post("/user", tags=["user"], status_code=status.HTTP_201_CREATED)
 def create_user(user_create: UserCreate, session: SessionDep) -> UserResponse:
 
-    return service.create_user(user_create, session)
-
-
-# @app.get("/user", tags=["user"])
-# def get_users(
-#     session: SessionDep,
-#     offset: int = 0,
-#     limit: Annotated[int, Query(le=100)] = 10,
-# ) -> List[UserResponse]:
-
-#     return service.get_users(session, offset, limit)
+    return user_service.create_user(user_create, session)
 
 
 @app.get("/user", tags=["user"])
@@ -120,13 +111,13 @@ def get_users(
 ) -> Page[UserResponse]:
     # set_page(Page[UserResponse])
     # set_params(Params(size=10))
-    return service.get_users(session)
+    return user_service.get_users(session)
 
 
 @app.get("/user/{user_id}", tags=["user"])
 def get_user(user_id: int, session: SessionDep) -> UserResponse:
 
-    return service.get_users(user_id, session)
+    return user_service.get_users(user_id, session)
 
 
 @app.put("/user/{user_id}", tags=["user"])
@@ -137,13 +128,13 @@ def update_user(
     current_user: CurrentUserDep,
 ) -> UserResponse:
 
-    return service.update_user(user_id, update_user, session)
+    return user_service.update_user(user_id, update_user, session)
 
 
 @app.delete("/user/{user_id}", tags=["user"], status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int):
 
-    return service.delete_user(user_id)
+    return user_service.delete_user(user_id)
 
 
 if __name__ == "__main__":
