@@ -1,0 +1,38 @@
+{% extends "layout.html" %} {% block content %}
+<br />
+<h1>Create Post</h1>
+<br />
+
+<form id="CreatePostForm">
+  <div class="form-row">   
+    
+    <div class="form-group col-md-6 mt-2">
+      <label>Title</label>
+      <input
+        type="text"
+        class="form-control"
+        name="title"
+        required
+        value=""
+      />
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Content</label>
+      <textarea class="form-control" name="content" required rows="5"></textarea>
+    </div>
+  <button
+    type="submit"
+    class="btn btn-primary mt-3"
+    {%
+    if
+    not
+    user
+    %}disabled{%
+    endif
+    %}
+  >
+    Submit
+  </button>
+</form>
+
+{% endblock content %}

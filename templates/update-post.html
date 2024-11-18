@@ -1,0 +1,76 @@
+{% extends "layout.html" %} {% block content %}
+<br />
+<h1>Post</h1>
+<br />
+
+<form id="postForm">
+  <div class="form-row">
+    <div class="form-group col-md-6 mt-2">
+      <label>Id</label>
+      <input
+        type="text"
+        class="form-control"
+        name="id"
+        required
+        readonly
+        value="{{post.id}}"
+        id="postId"
+      />
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Author</label>
+      <input
+        type="text"
+        class="form-control"
+        name="name"
+        required
+        readonly
+        value="{{post.user.name}}"
+      />
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Title</label>
+      <input
+        type="text"
+        class="form-control"
+        name="title"
+        required
+        value="{{post.title}}"
+      />
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Content</label>
+      <textarea class="form-control" name="content" required rows="5">
+{{post.content}}
+      </textarea>
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Created At</label>
+      <input
+        type="text"
+        class="form-control"
+        name="created_at"
+        readonly
+        value="{{post.created_at}}"
+      />
+    </div>
+    <div class="form-group col-md-6 mt-2">
+      <label>Updated At</label>
+      <input
+        type="text"
+        class="form-control"
+        name="updated_at"
+        readonly
+        value="{{post.updated_at}}"
+      />
+    </div>
+  </div>
+  {% if user %}
+  <button type="submit" class="btn btn-primary mt-3">Update</button>
+  <button id="deleteButton" type="button" class="btn btn-danger mt-3">
+    Delete
+  </button>
+  {% endif %}
+</form>
+
+{% endblock content %}
