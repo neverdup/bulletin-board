@@ -15,7 +15,6 @@ from fastapi.templating import Jinja2Templates
 
 from sqlalchemy.orm import Session
 from database import get_db
-from schemas import PostResponse, UserCreate, UserUpdate, UserResponse
 import auth
 from models import User
 from user.router import router as user_router

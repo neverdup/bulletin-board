@@ -44,13 +44,13 @@ async def profile(
     )
 
 
-@router.post("/user", tags=["user"], status_code=status.HTTP_201_CREATED)
+@router.post("", tags=["user"], status_code=status.HTTP_201_CREATED)
 def create_user(user_create: UserCreate, session: SessionDep) -> UserResponse:
 
     return service.create_user(user_create, session)
 
 
-@router.get("/user", tags=["user"])
+@router.get("", tags=["user"])
 def get_users(
     session: SessionDep,
     params: Params = Depends(),
@@ -60,13 +60,13 @@ def get_users(
     return service.get_users(session)
 
 
-@router.get("/user/{user_id}", tags=["user"])
+@router.get("/{user_id}", tags=["user"])
 def get_user(user_id: int, session: SessionDep) -> UserResponse:
 
     return service.get_users(user_id, session)
 
 
-@router.put("/user/{user_id}", tags=["user"])
+@router.put("/{user_id}", tags=["user"])
 def update_user(
     user_id: int,
     update_user: UserUpdate,
@@ -77,7 +77,7 @@ def update_user(
     return service.update_user(user_id, update_user, session)
 
 
-@router.delete("/user/{user_id}", tags=["user"], status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_id}", tags=["user"], status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int):
 
     return service.delete_user(user_id)
