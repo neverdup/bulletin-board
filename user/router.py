@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, Request, status, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi_pagination import Page, Params
@@ -26,18 +26,26 @@ def register(request: Request):
     )
 
 
-@router.get("/profile", tags=["user"], response_class=HTMLResponse)
+@router.get("/profile/{id}", tags=["user"], response_class=HTMLResponse)
 async def profile(
+    id: int,
     request: Request,
     session: SessionDep,
 ):
     context = {"title": "Profile"}
-    current_user = await auth.get_current_user(
-        request.cookies.get("access_token"),
-        session,
-    )
-    if current_user:
-        context.update({"user": current_user})
+    try:
+        current_user = await auth.get_current_user(
+            request.cookies.get("access_token"),
+            session,
+        )
+        if current_user:
+            context.update({"current_user": current_user})
+    except HTTPException:
+        pass
+
+    user = service.get_user(id, session)
+    if user:
+        context.update({"user": user})
 
     return templates.TemplateResponse(
         request=request, name="profile.html", context=context
@@ -63,7 +71,7 @@ def get_users(
 @router.get("/{user_id}", tags=["user"])
 def get_user(user_id: int, session: SessionDep) -> UserResponse:
 
-    return service.get_users(user_id, session)
+    return service.get_user(user_id, session)
 
 
 @router.put("/{user_id}", tags=["user"])

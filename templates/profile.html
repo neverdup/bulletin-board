@@ -7,53 +7,41 @@
   <div class="form-row">
     <div class="form-group col-md-6 mt-2">
       <label>Email</label>
-      <input
-        type="hidden"
-        name="id"
-        {%
-        if
-        user
-        %}
-        value="{{user.id}}"
-        {%
-        endif
-        %}
-      />
+      {% if user %}
+      <input type="hidden" name="id" value="{{user.id}}" />
+      {% else %}
+      <input type="hidden" name="id" />
+      {% endif %} {% if user %}
       <input
         type="text"
         class="form-control"
         name="email"
         required
         disabled
-        {%
-        if
-        user
-        %}
         value="{{user.email}}"
-        {%
-        endif
-        %}
       />
+      {% else %}
+      <input type="text" class="form-control" name="email" required disabled />
+      {% endif %}
     </div>
     <div class="form-group col-md-6 mt-2">
       <label>Name</label>
+      {% if user %}
       <input
         type="text"
         class="form-control"
         name="name"
         required
-        {%
-        if
-        user
-        %}
         value="{{user.name}}"
-        {%
-        endif
-        %}
       />
+      {% else %}
+      <input type="text" class="form-control" name="name" required />
+      {% endif %}
     </div>
   </div>
+  {% if current_user %}
   <button type="submit" class="btn btn-primary mt-3">Update</button>
+  {% endif %}
 </form>
 
 {% endblock content %}

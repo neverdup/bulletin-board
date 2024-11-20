@@ -17,7 +17,7 @@
       <tr>
         <th scope="row">{{post.id}}</th>
         <td><a class="nav-link active" href="{{ url_for('post_page', id=post.id) }}">{{post.title}}</a></td>
-        <td>{{post.user.name}}</td>
+        <td><a class="nav-link active" href="{{ url_for('profile', id=post.user.id) }}">{{post.user.name}}</a></td>
         <td>{{post.created_at.strftime('%Y-%m-%d')}}</td>
       </tr>
       {% endfor %} 
