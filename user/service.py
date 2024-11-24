@@ -2,14 +2,14 @@ from typing import Annotated
 from database import SessionDep
 from models import User
 from sqlalchemy import select
-from fastapi_pagination.ext.sqlalchemy import paginate
-from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi import HTTPException, status
 from schemas import UserCreate, UserUpdate
 from auth import get_password_hash
 
 
-def create_user(user_create: UserCreate, session: SessionDep) -> User:
+def create_user(user_create: UserCreate, session: Session) -> User:
     user = User(**user_create.model_dump())
     user.password = get_password_hash(user_create.password)
     session.add(user)
@@ -20,12 +20,12 @@ def create_user(user_create: UserCreate, session: SessionDep) -> User:
 
 
 def get_users(
-    session: SessionDep,
+    session: Session,
 ) -> list[User]:
     return paginate(session, select(User).order_by(User.created_at.desc()))
 
 
-def get_user(user_id: int, session: SessionDep) -> User:
+def get_user(user_id: int, session: Session) -> User:
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(
@@ -34,7 +34,7 @@ def get_user(user_id: int, session: SessionDep) -> User:
     return user
 
 
-def update_user(user_id: int, update_user: UserUpdate, session: SessionDep) -> User:
+def update_user(user_id: int, update_user: UserUpdate, session: Session) -> User:
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -51,8 +51,7 @@ def update_user(user_id: int, update_user: UserUpdate, session: SessionDep) -> U
     return user
 
 
-def delete_user(user_id: int):
-    session = next(get_db())
+def delete_user(user_id: int, session: Session):
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

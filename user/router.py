@@ -83,6 +83,6 @@ def update_user(
 
 
 @router.delete("/{user_id}", tags=["user"], status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: int):
+def delete_user(user_id: int, session: SessionDep):
 
-    return service.delete_user(user_id)
+    return service.delete_user(user_id, session)
