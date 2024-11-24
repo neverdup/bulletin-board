@@ -3,15 +3,12 @@ from fastapi_pagination import Page, Params
 from schemas import PostCreate, PostResponse, PostUpdate
 from post import service
 from typing import Annotated, List
-from models import User
-from auth import get_current_user
+from auth import CurrentUserDep, get_current_user
 from fastapi.templating import Jinja2Templates
 from post import service as post_service
-from sqlalchemy.orm import Session
-from database import get_db
+from database import SessionDep
 
-SessionDep = Annotated[Session, Depends(get_db)]
-CurrentUserDep = Annotated[User, Depends(get_current_user)]
+
 router = APIRouter(prefix="/post", tags=["post"])
 templates = Jinja2Templates(directory="templates")
 

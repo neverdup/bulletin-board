@@ -10,7 +10,7 @@ from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-from schemas import UserResponse
+
 import os
 
 # from main import SessionDep
@@ -23,20 +23,9 @@ templates = Jinja2Templates(directory="templates")
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = os.getenv("SECRET_KEY")
-print(SECRET_KEY)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -145,3 +134,5 @@ def login(request: Request):
 #     current_user: Annotated[User, Depends(get_current_user)],
 # ):
 #     return current_user
+
+CurrentUserDep = Annotated[User, Depends(get_current_user)]

@@ -13,8 +13,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from sqlalchemy.orm import Session
-from database import get_db
+
+from database import get_db, SessionDep
 import auth
 from models import User
 from user.router import router as user_router
@@ -26,9 +26,6 @@ from fastapi_pagination import Page, add_pagination, Params, set_page, set_param
 from fastapi_pagination.ext.sqlalchemy import paginate
 import traceback
 
-
-SessionDep = Annotated[Session, Depends(get_db)]
-CurrentUserDep = Annotated[User, Depends(auth.get_current_user)]
 
 app = FastAPI()
 

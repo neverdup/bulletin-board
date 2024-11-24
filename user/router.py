@@ -5,17 +5,14 @@ from fastapi.templating import Jinja2Templates
 from fastapi_pagination import Page, Params
 from sqlalchemy.orm import Session
 
-import auth
-from database import get_db
+from auth import get_current_user, CurrentUserDep
+from database import SessionDep
 from models import User
 from schemas import UserCreate, UserResponse, UserUpdate
 from user import service
 
 router = APIRouter(prefix="/user", tags=["usre"])
 templates = Jinja2Templates(directory="templates")
-
-SessionDep = Annotated[Session, Depends(get_db)]
-CurrentUserDep = Annotated[User, Depends(auth.get_current_user)]
 
 
 @router.get("/register", tags=["user"], response_class=HTMLResponse)
@@ -34,7 +31,7 @@ async def profile(
 ):
     context = {"title": "Profile"}
     try:
-        current_user = await auth.get_current_user(
+        current_user = await get_current_user(
             request.cookies.get("access_token"),
             session,
         )

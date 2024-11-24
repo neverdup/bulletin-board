@@ -1,5 +1,5 @@
 from typing import Annotated
-from database import get_db
+from database import SessionDep
 from models import User
 from sqlalchemy import select
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -7,8 +7,6 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from schemas import UserCreate, UserUpdate
 from auth import get_password_hash
-
-SessionDep = Annotated[Session, Depends(get_db)]
 
 
 def create_user(user_create: UserCreate, session: SessionDep) -> User:
