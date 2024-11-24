@@ -11,7 +11,7 @@ class User(Base):
     id: int = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     name: str = Column(String(32), nullable=False)
     email: str = Column(String(100), nullable=False, unique=True)
-    password: str = Column(String(32), nullable=False)
+    password: str = Column(String, nullable=False)
     created_at: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
