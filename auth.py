@@ -129,7 +129,7 @@ def login(request: Request):
     )
 
 
-# @router.get("/users/me/", response_model=UserResponse)
+# @router.get("/users/me/", response_model=UserOut)
 # async def read_users_me(
 #     current_user: Annotated[User, Depends(get_current_user)],
 # ):

@@ -23,7 +23,7 @@ class UserUpdate(UserBase):
         from_attributes = True
 
 
-class UserResponse(UserBase):
+class UserOut(UserBase):
     id: int
     created_at: datetime
     updated_at: datetime

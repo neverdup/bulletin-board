@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from auth import get_current_user, CurrentUserDep
 from database import SessionDep
 from models import User
-from schemas import UserCreate, UserResponse, UserUpdate
+from schemas import UserCreate, UserOut, UserUpdate
 from user import service
 
 router = APIRouter(prefix="/user", tags=["usre"])
@@ -50,7 +50,7 @@ async def profile(
 
 
 @router.post("", tags=["user"], status_code=status.HTTP_201_CREATED)
-def create_user(user_create: UserCreate, session: SessionDep) -> UserResponse:
+def create_user(user_create: UserCreate, session: SessionDep) -> UserOut:
 
     return service.create_user(user_create, session)
 
@@ -59,14 +59,14 @@ def create_user(user_create: UserCreate, session: SessionDep) -> UserResponse:
 def get_users(
     session: SessionDep,
     params: Params = Depends(),
-) -> Page[UserResponse]:
-    # set_page(Page[UserResponse])
+) -> Page[UserOut]:
+    # set_page(Page[UserOut])
     # set_params(Params(size=10))
     return service.get_users(session)
 
 
 @router.get("/{user_id}", tags=["user"])
-def get_user(user_id: int, session: SessionDep) -> UserResponse:
+def get_user(user_id: int, session: SessionDep) -> UserOut:
 
     return service.get_user(user_id, session)
 
@@ -77,7 +77,7 @@ def update_user(
     update_user: UserUpdate,
     session: SessionDep,
     current_user: CurrentUserDep,
-) -> UserResponse:
+) -> UserOut:
 
     return service.update_user(user_id, update_user, session)
 
