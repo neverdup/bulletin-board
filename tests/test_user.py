@@ -1,6 +1,29 @@
 from tests.database import client, session
 import pytest
 import schemas
+import jwt
+import os
+import auth
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
+
+
+@pytest.fixture
+def login_user(client):
+    user_data = {
+        "name": "neverdup",
+        "email": "neverdup@gmail.com",
+        "password": "password",
+    }
+
+    res = client.post("/user/", json=user_data)
+    assert res.status_code == 201
+
+    new_user = res.json()
+    new_user["password"] = user_data["password"]
+
+    return new_user
 
 
 @pytest.fixture()
@@ -62,14 +85,19 @@ def test_get_users(client, default_users, page, size):
     assert res.status_code == 200
 
 
-def test_token(client, default_users):
+def test_token(client, login_user):
 
     res = client.post(
         "/auth/token",
         data={
-            "username": "user00@gmail.com",
-            "password": "password",
+            "username": login_user["email"],
+            "password": login_user["password"],
         },
     )
 
+    login_res = auth.Token(**res.json())
+    payload = jwt.decode(login_res.access_token, SECRET_KEY, algorithms=[ALGORITHM])
+    eamil = payload.get("sub")
+    assert eamil == login_user["email"]
+    assert login_res.token_type == "bearer"
     assert res.status_code == 200
