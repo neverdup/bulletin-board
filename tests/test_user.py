@@ -3,16 +3,7 @@ import pytest
 import schemas
 
 
-@pytest.fixture
-# @pytest.mark.parametrize(
-#     "name, email, password",
-#     [
-#         ("user1", "user1@gmail.com", "password"),
-#         ("user2", "user2@gmail.com", "password"),
-#         ("user3", "user3@gmail.com", "password"),
-#     ],
-# )
-# def default_users(client, name, email, password):
+@pytest.fixture()
 def default_users(client):
 
     NO_OF_USERS = 20
@@ -64,7 +55,21 @@ def test_get_users(client, default_users, page, size):
     res = client.get("/user", params=params)
 
     pagination = res.json()
-    # print(pagination)
+
+    # print(type(pagination))
     assert len(pagination["items"]) == params["size"]
     assert pagination["page"] == params["page"]
+    assert res.status_code == 200
+
+
+def test_token(client, default_users):
+
+    res = client.post(
+        "/auth/token",
+        data={
+            "username": "user00@gmail.com",
+            "password": "password",
+        },
+    )
+
     assert res.status_code == 200
