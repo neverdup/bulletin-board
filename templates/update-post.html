@@ -55,7 +55,7 @@
       >
     </div>
   </div>
-  {% if user %}
+  {% if user and user.id == post.user_id %}
   <button type="submit" class="btn btn-primary mt-3">Update</button>
   <button id="deleteButton" type="button" class="btn btn-danger mt-3">
     Delete
@@ -76,11 +76,54 @@
         >@{{reply.user.name}}: {{reply.created_at.strftime('%Y-%m-%d
         %H:%M:%S')}}</label
       >
-      <textarea class="form-control" name="content" required rows="2">
+      <textarea
+        id="reply-{{reply.id}}"
+        class="form-control"
+        name="content"
+        required
+        rows="2"
+      >
 {{reply.content}}
       </textarea>
     </div>
+    {% if user and user.id == reply.user_id %}
+    <button
+      type="button"
+      class="btn btn-primary btn-sm mt-1 mb-2"
+      onclick="updateReply({{reply.id}});"
+    >
+      Update
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger btn-sm mt-1 mb-2"
+      onclick="deleteReply({{reply.id}});"
+    >
+      Delete
+    </button>
+    {% endif %}
   </div>
-  {% endfor %}
+  {% endfor %} {% if user %}
+  <div class="form-row">
+    <div class="form-group col-md-6 mt-4">
+      <label><b>create reply here</b></label>
+      <textarea
+        id="reply-content"
+        class="form-control"
+        name="content"
+        required
+        rows="2"
+      ></textarea>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary btn-sm mt-1 mb-2"
+      onclick="createReply();"
+    >
+      Create
+    </button>
+  </div>
+  {% endif %}
 </form>
 {% endblock content %}

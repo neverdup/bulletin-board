@@ -33,11 +33,14 @@ class UserOut(UserBase):
 
 
 class ReplyBase(BaseModel):
-    post_id: int
     content: str
 
 
 class ReplyCreate(ReplyBase):
+    post_id: int
+
+
+class ReplyUpdate(ReplyBase):
     pass
 
 

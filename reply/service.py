@@ -1,6 +1,6 @@
 from fastapi_pagination import Page
 import reply.repository as repo
-from schemas import ReplyCreate, PostOut, PostUpdate
+from schemas import ReplyCreate, ReplyUpdate
 from models import Post, User, Reply
 from sqlalchemy.orm import Session
 from typing import Annotated
@@ -31,50 +31,23 @@ def create_reply(user_id: int, reply_create: ReplyCreate):
 #     return post
 
 
-# def update_post(
-#     id: int,
-#     update_post: PostUpdate,
-#     current_user: CurrentUserDep,
-# ):
-#     post = repo.get_post(id)
+def update_reply(
+    id: int,
+    update_reply: ReplyUpdate,
+    current_user: User,
+):
+    reply = repo.update_reply(
+        id,
+        update_reply,
+        current_user,
+    )
 
-#     if not post:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="Post not found",
-#         )
-
-#     if current_user.id != post.user_id:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Not allowed to update other's post",
-#         )
-
-#     post = repo.update_post(
-#         id,
-#         update_post,
-#     )
-
-#     return post
+    return reply
 
 
-# def delete_post(
-#     id: int,
-#     current_user: CurrentUserDep,
-# ):
-
-#     post = repo.get_post(id)
-
-#     if not post:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="Post not found",
-#         )
-
-#     if current_user.id != post.user_id:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Not allowed to delete other's post",
-#         )
-
-#     repo.delete_post(id)
+def delete_post(
+    id: int,
+    current_user: CurrentUserDep,
+):
+    repo.delete_reply(id, current_user)
+    return

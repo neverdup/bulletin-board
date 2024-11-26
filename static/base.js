@@ -166,7 +166,7 @@ if (postForm) {
       } else {
         // Handle error
         const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
+        alert(`Error: ${errorData.detail}`);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -259,6 +259,116 @@ document
       alert("An error occurred. Please try again.");
     }
   });
+
+// reply Create
+async function createReply() {
+  const postId = document.getElementById("postId").value;
+  const content = document.getElementById("reply-content").value;
+  const payload = {
+    post_id: postId,
+    content: content,
+  };
+
+  try {
+    const token = getCookie("access_token");
+
+    if (!token) {
+      throw new Error("Authentication token not found");
+    }
+    const response = await fetch(`/reply`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      alert("Created successfully");
+      window.location.href = `/post/post-page/${postId}`;
+    } else {
+      // Handle error
+      const errorData = await response.json();
+      alert(`Error: ${errorData.detail}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again.");
+  }
+}
+
+// reply Update
+async function updateReply(replyId) {
+  const postId = document.getElementById("postId").value;
+  const content = document.getElementById(`reply-${replyId}`).value;
+  const payload = {
+    content: content,
+  };
+
+  try {
+    const token = getCookie("access_token");
+
+    if (!token) {
+      throw new Error("Authentication token not found");
+    }
+    const response = await fetch(`/reply/${replyId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      alert("Updated successfully");
+      window.location.href = `/post/post-page/${postId}`;
+    } else {
+      // Handle error
+      const errorData = await response.json();
+      alert(`Error: ${errorData.detail}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again.");
+  }
+}
+
+// Reply delete
+async function deleteReply(replyId) {
+  if (!confirm("Are you sure to delete?")) {
+    return;
+  }
+
+  const postId = document.getElementById("postId").value;
+
+  try {
+    const token = getCookie("access_token");
+    if (!token) {
+      throw new Error("Authentication token not found");
+    }
+
+    const response = await fetch(`/reply/${replyId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      // Handle success
+      window.location.href = `/post/post-page/${postId}`;
+    } else {
+      // Handle error
+      const errorData = await response.json();
+      alert(`Error: ${errorData.detail}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again.");
+  }
+}
 
 // Helper function to get a cookie by name
 function getCookie(name) {

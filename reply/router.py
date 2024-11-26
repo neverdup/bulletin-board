@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, Depends, Request
 from fastapi_pagination import Page, Params
-from schemas import ReplyCreate, ReplyOut
+from schemas import ReplyCreate, ReplyUpdate, ReplyOut
 from reply import service
 from typing import Annotated, List
 from auth import CurrentUserDep, get_current_user
@@ -89,25 +89,25 @@ def create_reply(
 #     return post
 
 
-# @router.put("/{id}")
-# def update_post(
-#     id: int,
-#     update_post: PostUpdate,
-#     current_user: CurrentUserDep,
-# ) -> PostOut:
+@router.put("/{id}")
+def update_reply(
+    id: int,
+    update_reply: ReplyUpdate,
+    current_user: CurrentUserDep,
+) -> ReplyOut:
 
-#     post = post_service.update_post(
-#         id=id,
-#         update_post=update_post,
-#         current_user=current_user,
-#     )
-#     return post
+    reply = service.update_reply(
+        id=id,
+        update_reply=update_reply,
+        current_user=current_user,
+    )
+    return reply
 
 
-# @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-# def delete_post(
-#     id: int,
-#     current_user: CurrentUserDep,
-# ):
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(
+    id: int,
+    current_user: CurrentUserDep,
+):
 
-#     post_service.delete_post(id, current_user)
+    service.delete_post(id, current_user)

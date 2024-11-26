@@ -47,6 +47,8 @@ def update_post(
             detail="Post not found",
         )
 
+    print(f"current_user.id-{current_user.id}")
+    print(f"post.user_id-{post.user_id}")
     if current_user.id != post.user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

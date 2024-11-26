@@ -1,5 +1,6 @@
 from fastapi_pagination import Page, Params, set_page, set_params
 from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi import HTTPException, status
 from sqlalchemy import select, or_
 from sqlalchemy.orm import joinedload
 from schemas import PostCreate, PostOut, PostUpdate
@@ -42,38 +43,60 @@ def create_reply(reply: Reply) -> Reply:
 #     # return paginate(session.query(Post).order_by(Post.created_at.desc()))
 
 
-# def get_post(id: int) -> Post:
-#     session = next(get_db())
-#     post = session.query(Post).filter(Post.id == id).first()
-#     return post
+def get_reply(id: int) -> Reply:
+    session = next(get_db())
+    reply = session.query(Reply).filter(Reply.id == id).first()
+    return reply
 
 
-# def update_post(id: int, update_post: PostUpdate) -> Post:
-#     session = next(get_db())
-#     post = session.query(Post).filter(Post.id == id).first()
+def update_reply(
+    id: int,
+    update_reply: Reply,
+    current_user: User,
+) -> Reply:
+    session = next(get_db())
+    reply = session.query(Reply).filter(Reply.id == id).first()
 
-#     if not post:
-#         return False
+    if not reply:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Post not found",
+        )
 
-#     if update_post.title:
-#         post.title = update_post.title
+    if current_user.id != reply.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not allowed to update other's reply",
+        )
 
-#     if update_post.content:
-#         post.content = update_post.content
+    if update_reply.content:
+        reply.content = update_reply.content
 
-#     session.commit()
-#     session.refresh(post)
-#     return post
+    session.commit()
+    session.refresh(reply)
+    return reply
 
 
-# def delete_post(id: int):
-#     session = next(get_db())
-#     post = session.query(Post).filter(Post.id == id).first()
+def delete_reply(
+    id: int,
+    current_user: User,
+):
+    session = next(get_db())
+    reply = session.query(Reply).filter(Reply.id == id).first()
 
-#     if not post:
-#         return False
+    if not reply:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Post not found",
+        )
 
-#     session.delete(post)
-#     session.commit()
+    if current_user.id != reply.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not allowed to delete other's post",
+        )
 
-#     return
+    session.delete(reply)
+    session.commit()
+
+    return
