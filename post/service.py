@@ -1,11 +1,12 @@
 from fastapi_pagination import Page
 import post.repository as repo
-from schemas import PostCreate, PostResponse, PostUpdate
+from schemas import PostCreate, PostOut, PostUpdate
 from models import Post, User
 from sqlalchemy.orm import Session
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 import auth
+from operator import attrgetter
 
 CurrentUserDep = Annotated[User, Depends(auth.get_current_user)]
 
@@ -28,6 +29,8 @@ def get_posts(page: int = 1, size: int = 10, query: str | None = None) -> Page[P
 
 def get_post(id: int) -> Post:
     post = repo.get_post(id)
+    post.replys.sort(key=attrgetter("created_at"), reverse=True)
+
     return post
 
 

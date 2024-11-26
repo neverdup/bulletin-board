@@ -47,6 +47,30 @@ class Post(Base):
         onupdate=func.now(),
     )
     user = relationship("User", back_populates="posts")
+    replys = relationship("Reply")
 
     def __str__(self):
         return f"Post(title='{self.title}')"
+
+
+class Reply(Base):
+    __tablename__ = "reply"
+    id: int = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id: int = Column(Integer, ForeignKey("user.id"))
+    post_id: int = Column(Integer, ForeignKey("post.id"))
+    content: Text = Column(Text, nullable=False)
+    created_at: datetime = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+    updated_at: datetime = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+    user = relationship("User")
+
+    def __str__(self):
+        return f"Reply(content='{self.content}')"

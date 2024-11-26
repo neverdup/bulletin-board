@@ -32,6 +32,22 @@ class UserOut(UserBase):
         from_attributes = True
 
 
+class ReplyBase(BaseModel):
+    post_id: int
+    content: str
+
+
+class ReplyCreate(ReplyBase):
+    pass
+
+
+class ReplyOut(ReplyBase):
+    id: int
+    user: UserOut
+    created_at: datetime
+    updated_at: datetime
+
+
 class PostBase(BaseModel):
     title: str
     content: str
@@ -46,9 +62,10 @@ class PostUpdate(PostBase):
     content: str | None = None
 
 
-class PostResponse(PostBase):
+class PostOut(PostBase):
     id: int
     user_id: int
+    replys: list[ReplyOut]
     created_at: datetime
     updated_at: datetime
 

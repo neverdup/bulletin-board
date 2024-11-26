@@ -2,7 +2,7 @@ from fastapi_pagination import Page, Params, set_page, set_params
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import select, or_
 from sqlalchemy.orm import joinedload
-from schemas import PostCreate, PostResponse, PostUpdate
+from schemas import PostCreate, PostOut, PostUpdate
 from models import Post, User
 from database import get_db
 import auth

@@ -19,8 +19,8 @@ import auth
 from models import User
 from user.router import router as user_router
 from post.router import router as post_router
+from reply.router import router as reply_router
 from post import service as post_service
-from user import service as user_service
 
 from fastapi_pagination import Page, add_pagination, Params, set_page, set_params
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -32,6 +32,7 @@ app = FastAPI()
 app.include_router(auth.router)
 app.include_router(user_router)
 app.include_router(post_router)
+app.include_router(reply_router)
 
 add_pagination(app)
 
@@ -52,7 +53,7 @@ async def home(
         user = await auth.get_current_user(request.cookies.get("access_token"), session)
         context.update({"user": user})
     except Exception as err:
-        print(err)
+        print(err, ": no login user")
 
     try:
         posts = post_service.get_posts(

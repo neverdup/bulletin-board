@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, Depends, Request
 from fastapi_pagination import Page, Params
-from schemas import PostCreate, PostResponse, PostUpdate
+from schemas import PostCreate, PostOut, PostUpdate
 from post import service
 from typing import Annotated, List
 from auth import CurrentUserDep, get_current_user
@@ -63,7 +63,7 @@ async def post_page(
 def create_post(
     post_create: PostCreate,
     current_user: CurrentUserDep,
-) -> PostResponse:
+) -> PostOut:
 
     post = service.create_post(user_id=current_user.id, post_create=post_create)
     return post
@@ -73,7 +73,7 @@ def create_post(
 def get_posts(
     params: Params = Depends(),
     query: str | None = None,
-) -> Page[PostResponse]:
+) -> Page[PostOut]:
 
     posts = post_service.get_posts(
         page=params.page,
@@ -84,7 +84,7 @@ def get_posts(
 
 
 @router.get("/{id}")
-def get_post(id: int) -> PostResponse:
+def get_post(id: int) -> PostOut:
 
     post = post_service.get_post(id)
     return post
@@ -95,7 +95,7 @@ def update_post(
     id: int,
     update_post: PostUpdate,
     current_user: CurrentUserDep,
-) -> PostResponse:
+) -> PostOut:
 
     post = post_service.update_post(
         id=id,
